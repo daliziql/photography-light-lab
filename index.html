@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="description" content="通过交互实验学习光圈、快门、ISO、景深与曝光。支持离线使用。">
 <title>这破相机真难用 · 摄影交互课</title>
 <style>
@@ -26,6 +26,66 @@
 .ap-number-study .formula{font-size:14px}
 .ap-number-study p{font-size:14px;color:#bdc8bf}
 .ap-number-study strong{color:var(--ink)}
+
+/* Quick impressions first; formulas and full experiments stay in the second part. */
+.lesson-level{display:flex;align-items:baseline;gap:13px;margin:27px 0 17px}.lesson-level span,.depth-number{font:11px ui-monospace,monospace;color:var(--accent)}.lesson-level h3{margin:0;font-size:22px}.lesson-level p{margin:0;color:var(--muted);font-size:12px}
+.quick-points{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:21px;margin:20px 0 10px}.quick-points>div{border-top:2px solid var(--mint);padding-top:13px}.quick-points h4{font-size:16px;line-height:1.6;margin:0 0 7px}.quick-points p{color:var(--muted);font-size:13px;margin:0}.quick-condition{font-size:12px;color:var(--muted);margin:16px 0 0}
+.quick-lab .lab-top b{font-size:14px}.quick-lab .lab-body{padding:20px}.quick-options{display:flex;gap:7px;flex-wrap:wrap}.quick-options button{font-size:12px;padding:6px 11px}.quick-options button[aria-pressed="true"]{background:var(--mint);color:#17231c;border-color:var(--mint)}.quick-settings{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:17px 25px;align-items:center;margin-top:21px}.quick-settings .control{min-width:0}.quick-lab .lab-note{min-height:3.6em;margin-top:14px}
+.lesson-depth{margin-top:30px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);scroll-margin-top:20px}.lesson-depth>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:25px minmax(0,1fr) auto;align-items:center;gap:13px;padding:22px 0}.lesson-depth>summary::-webkit-details-marker{display:none}.lesson-depth>summary:focus-visible{outline:3px solid var(--accent);outline-offset:5px}.depth-title{font-size:21px;font-weight:550;display:block}.depth-description{font-size:12px;color:var(--muted);display:block;margin-top:3px}.depth-action{font-size:12px;color:var(--mint);white-space:nowrap}.when-open{display:none}.lesson-depth[open]>summary .when-closed{display:none}.lesson-depth[open]>summary .when-open{display:inline}.depth-content{padding:0 0 23px}.depth-intro{font-size:14px;color:var(--muted);margin:0 0 21px}.depth-content>.lab:first-of-type{margin-top:0}.depth-content>.details:last-child{padding-bottom:0}
+@media(max-width:760px){.lesson-level{flex-wrap:wrap;gap:7px 11px}.lesson-level p{width:100%;padding-left:27px}.quick-points{grid-template-columns:1fr;gap:15px}.quick-points>div{border-top:0;border-left:2px solid var(--mint);padding:0 0 0 13px}.quick-points h4{font-size:15px}.quick-points p{font-size:12px}.quick-lab .lab-body{padding:14px}.quick-settings{grid-template-columns:1fr;gap:12px}.lesson-depth>summary{grid-template-columns:20px minmax(0,1fr);gap:10px;padding:19px 0}.depth-title{font-size:20px}.depth-action{grid-column:2}.quick-lab .lab-note{min-height:0}}
+
+/* Phone portrait: keep navigation reachable and controls large enough for touch. */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+.mobile-chapter-picker{display:none}
+.lab-layout>*,.controls>*,.quick-settings>*,.grid2>*,.grid3>*{min-width:0}
+@media(max-width:760px){
+ body{font-size:15px;padding-bottom:env(safe-area-inset-bottom)}
+ .sidebar{display:none}
+ .main{padding:0 max(16px,env(safe-area-inset-right)) 32px max(16px,env(safe-area-inset-left));max-width:100%}
+ .topline{position:sticky;top:0;z-index:20;gap:10px;align-items:center;margin:0 0 24px;padding:max(10px,env(safe-area-inset-top)) 0 10px;background:var(--bg);box-shadow:0 -12px 0 var(--bg)}
+ .topline>.desktop-kicker{display:none}.topline>.row{flex:none}.topline button{min-height:44px;padding:9px 12px;font-size:13px;white-space:nowrap}
+ .mobile-chapter-picker{display:block;flex:1;min-width:0;margin:0}
+ .mobile-chapter-picker select{display:block;width:100%;min-width:0;min-height:44px;padding:9px 28px 9px 10px;border:1px solid var(--line);border-radius:7px;color:var(--ink);background:var(--raised);font-size:16px}
+ button{min-height:44px;max-width:100%;font-size:14px;padding:9px 12px}
+ .controls,.two-canvases{grid-template-columns:minmax(0,1fr)}.controls{gap:22px}.lab-layout{gap:20px}
+ .lab-top{padding:14px;gap:8px}.lab-top b{font-size:14px}.lab-top>span{font-size:12px}
+ .lab-body,.quick-lab .lab-body{padding:14px}.lab canvas{max-width:100%}
+ .control label{font-size:14px;flex-wrap:wrap;margin-bottom:3px}.control output{font-size:19px;line-height:1.4}.control .ends{font-size:12px;gap:12px}
+ .control select{font-size:16px;min-height:48px;padding:10px}
+ .control input[type=range]{appearance:none;-webkit-appearance:none;display:block;height:44px;background:transparent;margin:2px 0;touch-action:pan-y pinch-zoom}
+ .control input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:#4d6052}
+ .control input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;margin-top:-10px;border:2px solid var(--bg);border-radius:50%;background:var(--accent)}
+ .control input[type=range]::-moz-range-track{height:6px;border-radius:3px;background:#4d6052}
+ .control input[type=range]::-moz-range-thumb{width:24px;height:24px;border:2px solid var(--bg);border-radius:50%;background:var(--accent)}
+ .control input[type=range]:disabled{opacity:.45}
+ .checks{min-height:44px;padding:5px 0;gap:9px;font-size:14px;align-items:flex-start}.checks input{flex:none;width:22px;height:22px;margin:2px 0}
+ .quick-options{gap:8px}.quick-options button{font-size:13px;padding:9px 10px;flex:1 1 auto}.quick-lab .lab-top .quick-options{width:100%}
+ .quick-settings>.quick-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+ .lab-actions{gap:8px}.lab-actions button{font-size:13px;padding:9px 10px;flex:1 1 auto}
+ .hero-art canvas{min-height:0;object-fit:contain}.frame-caption{font-size:10px;letter-spacing:1px;top:10px;left:10px}
+ .frame-bottom{position:static;padding:11px 12px;gap:5px;background:var(--panel);font-size:11px}.frame-bottom span{padding:0;background:transparent;max-width:100%;overflow-wrap:anywhere}.frame-bottom span:last-child{font-size:12px;font-family:inherit}
+ .hero-presets{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:16px}.hero-presets label{grid-column:1/-1;font-size:13px}.hero-presets button{font-size:13px;padding:9px 7px}
+ .readout{grid-template-columns:minmax(0,1fr);gap:12px}.readout>div{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:12px}.readout span{font-size:12px}.readout strong{font-size:18px;text-align:right;line-height:1.5}
+ .lab-note,.quick-lab .lab-note,.caption,.small,small,.depth-description,.reference figcaption,.two-canvases figcaption{font-size:13px;line-height:1.75}
+ .two-canvases{gap:20px}.two-canvases canvas{max-height:none;object-fit:contain}
+ .formula,.ap-number-study .formula{font-size:14px;line-height:1.85;padding:12px;min-width:0;overflow-wrap:anywhere}
+ .ap-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.ap-steps button{font-size:14px;padding:8px}.ap-size-comparison text{font-size:23px}
+ .lesson-depth{scroll-margin-top:100px}.depth-description{margin-top:5px}.depth-action{font-size:14px}.details summary{min-height:44px;font-size:14px;padding:8px 0}
+ .meter-value{flex-wrap:wrap;gap:6px 12px;font-size:12px}
+ .chapter-footer{flex-direction:column;align-items:stretch;gap:14px}.chapter-footer p{max-width:none;font-size:13px}.chapter-footer button{width:100%;font-size:14px;min-height:48px}#course-status:empty{display:none}
+ .training-nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.training-nav button{font-size:13px;padding:10px 8px;white-space:normal}
+ .quiz-options{flex-direction:column}.quiz-options button{width:100%;font-size:14px;padding:12px;text-align:left}.quiz-card p,.quiz-answer{font-size:14px}
+ .task{padding:18px}.task p,.task ul,.feedback{font-size:14px}#chapter-6>.row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}#task-load{grid-column:1/-1}
+ .table-wrap{overflow:visible}.table-wrap table,.table-wrap tbody{display:block;width:100%}.table-wrap thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+ .table-wrap tr{display:block;border:1px solid var(--line);border-radius:7px;margin:12px 0;padding:5px 12px}.table-wrap td{display:block;border:0;padding:9px 0;font-size:14px;overflow-wrap:anywhere}.table-wrap td+td{border-top:1px solid var(--line)}
+ .table-wrap td::before{content:attr(data-label);display:block;font-size:12px;color:var(--muted);margin-bottom:3px}
+ .footer-note{font-size:12px;line-height:1.8;margin-top:26px;overflow-wrap:anywhere}
+}
+@media(max-width:360px){
+ .main{padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}
+ .topline{gap:8px}.topline button{padding:9px 10px}.mobile-chapter-picker select{padding-left:8px}
+ .hero-presets{grid-template-columns:repeat(2,minmax(0,1fr))}.hero-presets button:last-child{grid-column:1/-1}
+}
 </style>
 </head>
 <body>
@@ -41,10 +101,10 @@
 <button data-page="6"><span>06</span> 练习与实拍指南</button>
 </nav><div class="side-bottom">学习进度<div class="progress-track"><i id="visit-progress"></i></div><span id="visit-text">已浏览 1 / 7 章</span><br><span>交互示意 · 可离线使用</span></div></aside>
 <main class="main">
-<div class="topline"><span>FIELD NOTES / PHOTOGRAPHY 01</span><div class="row"><span class="optional">光圈 / 快门 / ISO</span><button id="motion-toggle" aria-pressed="false">暂停动画</button></div></div>
+<div class="topline"><span class="desktop-kicker">FIELD NOTES / PHOTOGRAPHY 01</span><label class="mobile-chapter-picker" for="chapter-picker"><span class="sr-only">切换学习章节</span><select id="chapter-picker"><option value="0">00 课程介绍</option><option value="1">01 光圈</option><option value="2">02 快门</option><option value="3">03 ISO</option><option value="4">04 曝光档位</option><option value="5">05 相机模拟</option><option value="6">06 拍摄练习</option></select></label><div class="row"><span class="optional">光圈 / 快门 / ISO</span><button id="motion-toggle" aria-pressed="false">暂停动画</button></div></div>
 
 <section class="chapter" id="chapter-0" aria-labelledby="title-0">
-<div class="intro-head"><div><div class="eyebrow">PHOTOGRAPHY BASICS</div><h1 id="title-0">这破相机真难用</h1><p class="lead">调节参数，观察亮度、背景虚化、运动模糊和噪点的变化。</p></div><div class="intro-note">7 个章节，从单项实验到综合拍摄。<br>每节附原理说明和练习。<br><br><span class="tag">离线可用</span><span class="tag">随时暂停</span></div></div>
+<div class="intro-head"><div><div class="eyebrow">PHOTOGRAPHY BASICS</div><h1 id="title-0">这破相机真难用</h1><p class="lead">调节参数，观察亮度、背景虚化、运动模糊和噪点的变化。</p></div><div class="intro-note">7 个章节，从单项实验到综合拍摄。<br>先快速了解，再展开详细原理。<br><br><span class="tag">离线可用</span><span class="tag">随时暂停</span></div></div>
 <div class="hero-art"><canvas id="hero-canvas" width="1000" height="470" role="img" aria-label="公园骑行场景：不同参数预设改变曝光亮度、背景虚化、运动模糊与噪点">原创公园骑行示意图。</canvas><span class="frame-caption">公园骑行 · 模拟预览</span><div class="frame-bottom"><span id="hero-settings">50 mm · f/2 · 1/1000 s · ISO 200</span><span id="hero-effect" role="status">主体清楚，背景虚化</span></div></div>
 <div class="hero-presets"><label>比较预设</label><button data-hero="portrait" aria-pressed="true">浅景深</button><button data-hero="freeze" aria-pressed="false">凝固运动</button><button data-hero="motion" aria-pressed="false">运动拖影</button><button data-hero="grain" aria-pressed="false">收光不足</button><button data-hero="overexposed" aria-pressed="false">过曝</button></div><p class="caption">同一场景，比较虚化、拖影和曝光。欠曝看暗部，过曝看亮部。画面为插画模拟。</p>
 <div class="section-break"></div><h3>三个可调参数</h3><p class="muted">光圈、快门和 ISO 共同影响亮度，也各自影响画面的不同方面。</p>
@@ -54,7 +114,18 @@
 </section>
 
 <section class="chapter" id="chapter-1" aria-labelledby="title-1" hidden>
-<div class="eyebrow">01 / APERTURE</div><h2 id="title-1">光圈与景深</h2><p class="lead">固定焦距和对焦距离，把光圈从 f/2 收到 f/16，比较开口大小与前后景的清晰程度。</p>
+<div class="eyebrow">01 / APERTURE</div><h2 id="title-1">光圈与景深</h2><p class="lead">光圈控制镜头开口的大小。先看它怎样改变亮度和背景，再看数字从哪来。</p>
+<div class="quick-section" aria-labelledby="ap-quick-title">
+<div class="lesson-level"><span>01</span><h3 id="ap-quick-title">快速了解</h3><p>先记住这三点</p></div>
+<div class="quick-points"><div><h4>数字越小，开口越大</h4><p>光圈数字要反着看：f/2 是大光圈，f/8 是小光圈。</p></div><div><h4>开口越大，画面越亮</h4><p>开口大，进来的光更多；收小光圈，画面就会变暗。</p></div><div><h4>开口越大，背景通常越虚</h4><p>想让人物突出，可以开大光圈；想让前后都清楚，可以适当收小。</p></div></div><p class="quick-condition">比较时，其余设置、光线、焦距和拍摄位置不变。</p>
+<div class="lab quick-lab"><div class="lab-top"><b>只调光圈</b><span>固定机位与对焦位置</span><div class="quick-options" role="group" aria-label="光圈预览方式"><button data-quick-view="ap" data-view="brightness" aria-pressed="true">看亮度</button><button data-quick-view="ap" data-view="blur" aria-pressed="false">看背景虚化</button></div></div><div class="lab-body">
+<canvas id="ap-quick-scene" width="900" height="420" role="img" aria-label="只调光圈的公园照片预览">拖动滑块比较照片变化。</canvas>
+<div class="quick-settings"><div class="control"><label for="ap-quick-slider">光圈 <output id="ap-quick-out">f/4</output></label><input id="ap-quick-slider" data-quick-slider="ap" type="range" min="0" max="8" value="3"><div class="ends"><span>f/1.4 · 大开口</span><span>f/22 · 小开口</span></div></div><div class="quick-options" role="group" aria-label="光圈快速对照"><button data-quick-preset="ap" data-index="1" aria-pressed="false">f/2 · 大光圈</button><button data-quick-preset="ap" data-index="5" aria-pressed="false">f/8 · 小光圈</button></div></div>
+<p class="lab-note" id="ap-quick-note" role="status"></p></div></div>
+</div>
+<details class="lesson-depth" id="ap-depth"><summary><span class="depth-number">02</span><span><span class="depth-title">详细原理</span><span class="depth-description">f 值、孔径计算、整档刻度与景深</span></span><span class="depth-action"><span class="when-closed">展开学习 ＋</span><span class="when-open">收起 −</span></span></summary>
+<div class="depth-content"><p class="depth-intro">下面用完整实验解释：光圈数字为什么反着看，进光量为什么按平方变化，以及虚化和景深的关系。</p>
+
 <div class="lab"><div class="lab-top"><b>实验 01 · 开口与清晰范围</b><span>固定构图 · 骑行者在 5 m 处</span></div><div class="lab-body"><div class="lab-layout"><div><canvas id="ap-scene" width="900" height="420" role="img" aria-label="可调光圈与对焦距离的公园景深预览">景深预览。</canvas><canvas id="ap-optics" width="900" height="255" role="img" aria-label="光圈开口、光束截面与景深距离尺">光圈和光束示意。</canvas></div><div class="controls">
 <div class="control"><label for="ap-n">光圈 <output id="ap-n-out">f/2.8</output></label><input id="ap-n" type="range" min="0" max="8" value="2"><div class="ends"><span>f/1.4 大开口</span><span>f/22 小开口</span></div></div>
 <div class="control"><label for="ap-focus">对焦距离 <output id="ap-focus-out">5.0 m</output></label><input id="ap-focus" type="range" min="15" max="150" value="50"><div class="ends"><span>1.5 m 近</span><span>15 m 远</span></div></div>
@@ -64,32 +135,58 @@
 <div class="question"><b>对照练习</b>① 用 f/2，将焦点从 5 m 移到 2 m，比较花和人。② 回到 5 m，收至 f/16。③ 取消“保持预览亮度”，观察亮度变化。</div>
 <div class="ap-number-study"><h3>f/2 的“2”是什么？</h3><p><strong>光圈（Aperture）</strong>是镜头内可调的通光开口。<strong>f 是焦距，斜杠后的数字是光圈系数 N</strong>。常说的“f 值越小”，指的是 N 越小。</p>
 <div class="grid2"><div><div class="formula">N = 焦距 f ÷ 孔径 D<br>D = f ÷ N</div><p>用 50 mm 镜头计算：f/2 表示孔径为焦距的 1/2，f/4 表示 1/4。<strong>焦距固定，除数越小，算出的孔径越大。</strong></p>
-<div class="table-wrap"><table><thead><tr><th>光圈</th><th>孔径怎么算</th><th>相对 f/4 的进光量</th></tr></thead><tbody><tr><td>f/2</td><td>50 ÷ 2 = 25 mm</td><td>4 倍</td></tr><tr><td>f/4</td><td>50 ÷ 4 = 12.5 mm</td><td>1 倍</td></tr><tr><td>f/8</td><td>50 ÷ 8 = 6.25 mm</td><td>1/4</td></tr></tbody></table></div><p class="caption">D 严格指入口瞳直径，即从镜头前方看到的通光孔径；光圈孔可能被镜片放大。计算使用镜头的实际焦距。</p></div>
+<div class="table-wrap"><table><thead><tr><th>光圈</th><th>孔径怎么算</th><th>相对 f/4 的进光量</th></tr></thead><tbody><tr><td data-label="光圈">f/2</td><td data-label="孔径怎么算">50 ÷ 2 = 25 mm</td><td data-label="相对 f/4 的进光量">4 倍</td></tr><tr><td data-label="光圈">f/4</td><td data-label="孔径怎么算">50 ÷ 4 = 12.5 mm</td><td data-label="相对 f/4 的进光量">1 倍</td></tr><tr><td data-label="光圈">f/8</td><td data-label="孔径怎么算">50 ÷ 8 = 6.25 mm</td><td data-label="相对 f/4 的进光量">1/4</td></tr></tbody></table></div><p class="caption">D 严格指入口瞳直径，即从镜头前方看到的通光孔径；光圈孔可能被镜片放大。计算使用镜头的实际焦距。</p></div>
 <div><p>点击刻度，比较当前开口和固定的 f/4。上方滑块与预览会同步更新。</p><div class="ap-steps" role="group" aria-label="选择光圈整档刻度"><button data-ap-step="0" aria-pressed="false">f/1.4</button><button data-ap-step="1" aria-pressed="false">f/2</button><button data-ap-step="2" aria-pressed="true">f/2.8</button><button data-ap-step="3" aria-pressed="false">f/4</button><button data-ap-step="4" aria-pressed="false">f/5.6</button><button data-ap-step="5" aria-pressed="false">f/8</button><button data-ap-step="6" aria-pressed="false">f/11</button><button data-ap-step="7" aria-pressed="false">f/16</button><button data-ap-step="8" aria-pressed="false">f/22</button></div>
 <svg class="ap-size-comparison" viewBox="0 0 480 225" role="img" aria-labelledby="ap-size-title"><title id="ap-size-title">50 mm 镜头：当前孔径与 f/4 的等比例比较</title><circle cx="115" cy="105" r="85" fill="#253529"/><circle cx="365" cy="105" r="85" fill="#253529"/><circle id="ap-size-hole" cx="115" cy="105" r="40" fill="#a9d7b6"/><circle cx="365" cy="105" r="28.284271" fill="#e6b575"/><text id="ap-size-label" x="115" y="213" text-anchor="middle" font-size="17" fill="#edf1e8">f/2.8 · 17.7 mm</text><text x="365" y="213" text-anchor="middle" font-size="17" fill="#edf1e8">f/4 · 12.5 mm</text></svg>
 <div class="formula" id="ap-calculation" aria-live="polite">D ≈ 50 ÷ 2.828 = 17.7 mm<br>相对进光量 = (4 ÷ 2.828)² ≈ 2 倍</div><p class="caption" id="ap-rounding">本页按理论整档计算：f/2.8 对应约 2.828。常见刻度省略了部分小数。</p></div></div></div>
 <div class="grid2 lesson-text"><div><h3>整档刻度怎么计算？</h3><p>进光量与开口<strong>面积</strong>有关。把开口近似为圆，面积 A = π(D/2)²。同一焦距下，D = f/N，所以 <strong>A ∝ 1/N²</strong>。</p><p>收小一档，要让进光量减半：孔径除以 √2，光圈系数 N 就要乘以 √2（约 1.414）。</p><div class="formula">N 的下一整档 = N × √2<br>1 → 1.4 → 2 → 2.8 → 4 → 5.6 → 8 → 11 → 16 → 22</div><p>例如 2 × √2 ≈ 2.828，再乘 √2 就是 4。所以 <strong>f/2 → f/4 少了两档光</strong>：直径减半，面积变为 1/4。</p><p class="caption">f/2.8、f/5.6、f/11 等是整档序列的常见近似标记。1/3 档更细，N 每步乘 2^(1/6) ≈ 1.122，所以相机上也会有 f/3.2、f/3.5。上述进光比例假设光线不变，并忽略透光损失。</p></div><div><h3>景深：前后多大范围清楚</h3><p><strong>景深（Depth of Field）</strong>是对焦位置前后看起来足够清楚的距离范围。准确对焦的物平面之外，物点会在传感器上形成小光斑。</p><p>收小光圈，离焦光斑通常变小，景深变深。开大光圈、靠近主体对焦，通常会让景深变浅。</p><p><span class="label-fact">实拍：</span>拍人像时，先确保眼睛对焦准确。</p><p class="caption">参考：<a href="https://static.nikonusa.com/pdf/nikonschool/sat.pdf" target="_blank" rel="noreferrer">Nikon School · 光圈系数与孔径</a>；<a href="https://www.sony.co.uk/electronics/support/articles/00267926" target="_blank" rel="noreferrer">Sony · 光圈整档刻度</a>。</p></div></div>
 <details class="details"><summary>补充：焦距、衍射与景深计算</summary><p>固定机位和对焦距离时，长焦通常景深更浅，取景也更窄。若为保持人物大小而后退，就不能只按焦距比较。背景离主体越远，通常越容易虚化。</p><p>很小的光圈会加重衍射，使细节变软，程度取决于镜头、像素与观看尺度。本页未模拟衍射和像差，不能据此判断镜头在哪档最锐。</p><p>【教学简化】景深数字采用薄透镜近似，50 mm 焦距、弥散圈阈值 c = 0.03 mm（按 35 mm 全画幅的一种常用观看约定）。H = f²/(Nc) + f；近界 = Hs/(H+s−f)，远界 = Hs/(H−s+f)，分母不正时远界视为无限。距离统一用 mm 计算。它不是清晰与模糊的硬边界；上方插画的虚化程度经适度放大便于观察。</p></details>
+</div></details>
 <div class="chapter-footer"><p>其他条件不变时，f/2 与 f/8 有哪些差别？</p><button class="primary" data-go="2">下一章：快门 →</button></div>
 </section>
 
 <section class="chapter" id="chapter-2" aria-labelledby="title-2" hidden>
-<div class="eyebrow">02 / SHUTTER SPEED</div><h2 id="title-2">快门与运动模糊</h2><p class="lead">调慢快门，点击“重播曝光”，观察骑行者经过的位置如何形成拖影。</p>
-<div class="lab"><div class="lab-top"><b>实验 02 · 曝光过程</b><span>慢放演示</span></div><div class="lab-body"><div class="lab-layout"><div><canvas id="sh-scene" width="900" height="420" role="img" aria-label="随快门和运动速度变化的时间累积照片">时间累积照片。</canvas><canvas id="sh-timeline" width="900" height="190" role="img" aria-label="曝光区间内骑行者的位置和累积进度">快门时间轴。</canvas><div class="row lab-actions"><button class="primary" id="sh-replay">重播曝光</button><button id="sh-step">单步 +10%</button><button id="sh-reset">复位</button></div></div><div class="controls">
+<div class="eyebrow">02 / SHUTTER SPEED</div><h2 id="title-2">快门与运动模糊</h2><p class="lead">快门决定一张照片记录多长时间。时间长短，既影响亮度，也影响运动中的人会不会糊。</p>
+<div class="quick-section" aria-labelledby="sh-quick-title">
+<div class="lesson-level"><span>01</span><h3 id="sh-quick-title">快速了解</h3><p>先记住这三点</p></div>
+<div class="quick-points"><div><h4>快门看的是时间长短</h4><p>1/1000 秒比 1/30 秒短得多。分母越大，记录的时间反而越短。</p></div><div><h4>时间越长，画面越亮</h4><p>开着的时间长，就能多收一些光；时间短，画面就暗一些。</p></div><div><h4>时间越短，动作越容易拍清</h4><p>时间长，移动的轨迹会留在照片里；时间短，更容易把动作定住。</p></div></div><p class="quick-condition">比较时，光线、光圈、ISO 和人物速度不变。这里说的“糊”是运动拖影。</p>
+<div class="lab quick-lab"><div class="lab-top"><b>只调快门</b><span>相机固定 · 骑行者持续移动</span><div class="quick-options" role="group" aria-label="快门时间预览方式"><button data-quick-view="sh" data-view="brightness" aria-pressed="false">看亮度</button><button data-quick-view="sh" data-view="motion" aria-pressed="true">看运动拖影</button></div></div><div class="lab-body">
+<canvas id="sh-quick-scene" width="900" height="420" role="img" aria-label="只调快门的公园照片预览">拖动滑块比较照片变化。</canvas>
+<div class="quick-settings"><div class="control"><label for="sh-quick-slider">快门时间 <output id="sh-quick-out">1/125 s</output></label><input id="sh-quick-slider" data-quick-slider="sh" type="range" min="0" max="12" value="5"><div class="ends"><span>1/4000 s · 短</span><span>1 s · 长</span></div></div><div class="quick-options" role="group" aria-label="快门时间快速对照"><button data-quick-preset="sh" data-index="2" aria-pressed="false">1/1000 s · 定住动作</button><button data-quick-preset="sh" data-index="10" aria-pressed="false">1/4 s · 留下拖影</button></div></div>
+<p class="lab-note" id="sh-quick-note" role="status"></p></div></div>
+</div>
+<details class="lesson-depth" id="sh-depth"><summary><span class="depth-number">02</span><span><span class="depth-title">详细原理</span><span class="depth-description">秒数、收光量、曝光过程与拖影计算</span></span><span class="depth-action"><span class="when-closed">展开学习 ＋</span><span class="when-open">收起 −</span></span></summary>
+<div class="depth-content"><p class="depth-intro">先弄清快门刻度和时间单位，再用慢放实验看一张照片怎样累计运动轨迹。</p>
+<div class="grid2 lesson-text"><div><h3>快门数字怎么读？</h3><p>快门标的是<strong>曝光时间</strong>，单位是秒（s）。1/1000 s = 0.001 s = 1 毫秒；1/250 s = 0.004 s = 4 毫秒。有些相机只显示“250”，实际指 1/250 秒；“1″”通常表示 1 秒。</p><p>“更快的快门”指更短的曝光时间。快门到 1 秒、2 秒时，要直接比较秒数，不能再按分母判断。</p></div><div><h3>一档时间差多少？</h3><p><strong>一档</strong>表示翻倍或减半。光线和光圈不变，1/250 s 延长到 1/125 s，时间加倍，收光量也加倍。</p><div class="formula">1/1000 → 1/500 → 1/250 → 1/125 s<br>每向右一步，时间和收光量都翻倍</div><p class="caption">1/60、1/30 等是常见标称刻度，相邻整档的时间比值有少许取整差异。</p></div></div>
+
+<div class="lab"><div class="lab-top"><b>实验 02 · 曝光过程</b><span>慢放演示</span></div><div class="lab-body"><div class="lab-layout"><div><canvas id="sh-scene" width="900" height="420" role="img" aria-label="随快门和运动速度变化的时间累积照片">时间累积照片。</canvas><canvas id="sh-timeline" width="900" height="190" role="img" aria-label="曝光区间内骑行者的位置和累积进度，位置间距经缩放便于观察">快门时间轴。</canvas><div class="row lab-actions"><button class="primary" id="sh-replay">重播曝光</button><button id="sh-step">单步 +10%</button><button id="sh-reset">复位</button></div></div><div class="controls">
 <div class="control"><label for="sh-t">快门时间 <output id="sh-t-out">1/125 s</output></label><input id="sh-t" type="range" min="0" max="12" value="5"><div class="ends"><span>1/4000 s 短</span><span>1 s 长</span></div></div>
 <div class="control"><label for="sh-speed">画面中的移动速度 <output id="sh-speed-out">180 px/s</output></label><input id="sh-speed" type="range" min="0" max="400" step="10" value="180"><div class="ends"><span>静止</span><span>更快</span></div></div>
 <div class="control wide"><label for="sh-progress">曝光演示进度 <output id="sh-progress-out">100%</output></label><input id="sh-progress" type="range" min="0" max="100" value="100"></div>
 <label class="checks wide"><input id="sh-shake" type="checkbox"><span>加入相机抖动示意<br><small>静止背景也会模糊。</small></span></label>
-<p class="small wide">预览按已曝光部分保持亮度，便于比较拖影。实际收光量见下方。</p>
+<p class="small wide">拖动滑块会暂停演示。上方“播放动画”从当前进度继续，“重播曝光”从头开始。预览保持亮度，实际收光量见下方。</p>
 </div></div><div class="readout"><div><span>完整曝光时间</span><strong id="sh-duration"></strong></div><div><span>完整曝光的主体位移</span><strong id="sh-blur"></strong></div><div><span>收光量 / 相对 1/125 s</span><strong id="sh-light"></strong></div></div><p class="lab-note" id="sh-observe"></p></div></div>
 <div class="grid2 lesson-text"><div><h3>曝光时间</h3><p><strong>快门时间（Shutter Speed）</strong>是传感器记录光的时长。1/1000 s 只有 1/100 s 的十分之一，收光量和运动位移也相应减少。</p><div class="formula">收光量 ∝ 时间 t<br>拖影长度 ≈ 画面移动速度 × t</div><p>这里的速度指画面中的位移速度。主体更近、焦距更长或横向运动时，拖影往往更明显。</p></div><div><h3>主体运动与相机抖动</h3><p><strong>只有主体拖影：</strong>主体在曝光期间移动。缩短快门可减少拖影。</p><p><strong>整个画面都拖影：</strong>可能是相机抖动。改善持机姿势、使用防抖或三脚架可以缓解。</p><p><span class="label-fact">注意：</span>三脚架只能稳定相机。失焦通常表现为扩散式虚化，要与运动拖影区分。</p></div></div>
 <div class="question"><b>对照练习</b>将速度调到 0、快门调到 1 s，比较勾选“相机抖动”前后的画面。</div>
 <details class="details"><summary>补充：安全快门、摇拍与电子快门</summary><p>【经验】静止场景手持可从“快门不慢于 1/等效焦距（秒）”附近试起，再根据像素、姿势、防抖和成片检查调整。这不是保证清晰的公式。拍运动主体要先看主体运动，骑行可从 1/500–1/1000 s 尝试，具体仍由距离、方向和速度决定。</p><p>摇拍是在曝光中跟随主体，让主体相对相机移动变小，而背景拉成线。它需要练习，本实验固定相机，没有模拟跟拍。机械帘幕高速狭缝、电子快门逐行读出可能产生滚动快门形变，也不在本模型里。</p></details>
+</div></details>
 <div class="chapter-footer"><p>为什么用三脚架和 1 s 快门，仍拍不清跑步的人？</p><button class="primary" data-go="3">下一章：ISO →</button></div>
 </section>
 
 <section class="chapter" id="chapter-3" aria-labelledby="title-3" hidden>
-<div class="eyebrow">03 / ISO & SIGNAL</div><h2 id="title-3">ISO 与噪点</h2><p class="lead">先只调高 ISO，再增加收光量并降低 ISO。比较传感器记录、照片亮度与噪点。</p>
+<div class="eyebrow">03 / ISO & SIGNAL</div><h2 id="title-3">ISO 与噪点</h2><p class="lead">ISO 可以先当作照片的提亮设置。数字调高会更亮，但不会让镜头多收进来一束光。</p>
+<div class="quick-section" aria-labelledby="iso-quick-title">
+<div class="lesson-level"><span>01</span><h3 id="iso-quick-title">快速了解</h3><p>先记住这三点</p></div>
+<div class="quick-points"><div><h4>ISO 越高，照片越亮</h4><p>其他设置不动，把 ISO 从 100 调到 800，照片会明显变亮。</p></div><div><h4>调高 ISO，不等于多收光</h4><p>它改变已有信号的处理方式。真正多收光，要靠光圈、快门或补光。</p></div><div><h4>暗处提亮，噪点也容易看见</h4><p>光收得少，画面往往更粗糙。高 ISO 常用于暗处，但噪点不只由 ISO 决定。</p></div></div><p class="quick-condition">比较时，光线、光圈和快门固定。如果已经受限，可以提高 ISO，先把照片拍清、拍亮。</p>
+<div class="lab quick-lab"><div class="lab-top"><b>只调 ISO</b><span>固定弱光、光圈和快门</span></div><div class="lab-body">
+<canvas id="iso-quick-scene" width="900" height="420" role="img" aria-label="只调 ISO的公园照片预览">拖动滑块比较照片变化。</canvas>
+<div class="quick-settings"><div class="control"><label for="iso-quick-slider">ISO <output id="iso-quick-out">1600</output></label><input id="iso-quick-slider" data-quick-slider="iso" type="range" min="0" max="6" value="4"><div class="ends"><span>100 · 较暗</span><span>6400 · 较亮</span></div></div><div class="quick-options" role="group" aria-label="ISO快速对照"><button data-quick-preset="iso" data-index="0" aria-pressed="false">ISO 100</button><button data-quick-preset="iso" data-index="4" aria-pressed="true">ISO 1600</button></div></div>
+<p class="lab-note" id="iso-quick-note" role="status"></p></div></div>
+</div>
+<details class="lesson-depth" id="iso-depth"><summary><span class="depth-number">02</span><span><span class="depth-title">详细原理</span><span class="depth-description">ISO 刻度、信号增益、收光量与噪声</span></span><span class="depth-action"><span class="when-closed">展开学习 ＋</span><span class="when-open">收起 −</span></span></summary>
+<div class="depth-content"><p class="depth-intro">下面区分“收到了多少光”和“把信号放大多少”，再解释亮度相同的两张照片为什么会有不同噪点。</p>
+<div class="grid2 lesson-text"><div><h3>ISO 数字表示什么？</h3><p>ISO 100、200、400 是相机的<strong>感光度设置</strong>。在数字相机里，它影响从传感器信号到照片亮度的处理和标定；提高它，并不会改变已经收到的光。</p><p><strong>增益</strong>就是把信号乘上一个倍率。这里用 ISO 相对 100 的比值近似增益，方便理解。</p></div><div><h3>ISO 翻倍是什么变化？</h3><div class="formula">增益 ≈ ISO ÷ 100<br>ISO 100 → 200 → 400<br>增益 1 倍 → 2 倍 → 4 倍</div><p>固定收光量时，ISO 翻倍，对应增加一档，模型中的输出线性信号也翻倍。经过显示处理后，肉眼感到的亮度并不严格翻倍。</p></div></div>
+
 <div class="lab"><div class="lab-top"><b>实验 03 · 收光量与增益</b><span>理想信号模型 · 颗粒已放大</span></div><div class="lab-body"><div class="lab-layout"><div><div class="two-canvases"><figure><canvas id="iso-sensor" width="420" height="340" role="img" aria-label="固定显示尺度下的传感器收光记录，ISO 不改变它">传感器记录。</canvas><figcaption>① 传感器记录 / 固定显示尺度</figcaption></figure><figure><canvas id="iso-output" width="420" height="340" role="img" aria-label="ISO 增益后生成的亮度与噪点预览">输出照片。</canvas><figcaption>② 输出照片 / 应用 ISO 增益</figcaption></figure></div><canvas id="iso-chain" width="900" height="150" role="img" aria-label="光子数量、随机波动、增益和输出之间的动画">信号放大流程。</canvas><div class="row lab-actions"><button id="iso-low">少收光 + 高 ISO</button><button id="iso-high">多收光 + 低 ISO</button><button id="iso-sample">再记录一次</button><button id="iso-reset">复位</button></div></div><div class="controls">
 <div class="control"><label for="iso-photons">中灰区域平均收光 <output id="iso-photons-out">256</output></label><input id="iso-photons" type="range" min="5" max="13" value="8"><div class="ends"><span>32 个</span><span>8192 个</span></div></div>
 <div class="control"><label for="iso-gain">ISO 设置 <output id="iso-gain-out">400</output></label><input id="iso-gain" type="range" min="0" max="6" value="2"><div class="ends"><span>100</span><span>6400</span></div></div>
@@ -99,6 +196,7 @@
 <div class="question"><b>等亮度对照</b>切换两组预设：平均输出信号相同，第二组收光量为第一组的 16 倍，相对噪声更小。</div>
 <div class="grid2 lesson-text"><div><h3>收光量与噪声</h3><p>即使拍均匀灰墙，各像素的收光量也有随机波动，称为<strong>光子散粒噪声（Shot Noise）</strong>。相机读出电路还会引入读出噪声。</p><div class="formula">只看散粒噪声：<br>波动大小 ≈ √Q<br>相对波动 ≈ 1 / √Q</div><p>平均收光 100 个，典型波动约 10%；收光 10000 个，约为 1%。收光越多，相对波动越小。</p></div><div><h3>ISO 的作用</h3><p>数字相机的<strong>ISO</strong>影响信号放大与输出亮度。本页将其近似为增益。光圈、快门和环境光不变时，提高 ISO 不增加收光量。</p><p>弱光或短快门使收光不足，放大后噪点更明显。真实相机的读出噪声也会随 ISO 变化。</p><p><span class="label-fact">实拍：</span>快门和光圈受限时，可以提高 ISO，避免严重欠曝或为增加收光而产生运动模糊。</p></div></div>
 <details class="details"><summary>补充：动态范围、RAW 与模型限制</summary><p><strong>动态范围</strong>描述能同时分辨的亮部与暗部跨度。真实传感器及信号链有容量上限，高光饱和后会丢失信息；提高 ISO 往往减少高光余量，但具体规律依机型而异。屏幕预览发白不一定等于 RAW 已裁切，应结合相机直方图和高光警告判断。</p><p>真实相机可能使用模拟增益、数字增益、双转换增益和降噪。固定曝光时，提高 ISO 有时还能降低输入等效读出噪声，所以不能断言“低 ISO 后期提亮永远更干净”。本实验固定读出噪声为 3 个光电子，用近似高斯样本演示散粒噪声，不模拟具体机型、彩色滤阵、暗电流与降噪算法。</p></details>
+</div></details>
 <div class="chapter-footer"><p>亮度相同的照片，为什么噪点会不同？</p><button class="primary" data-go="4">下一章：一档曝光 →</button></div>
 </section>
 
@@ -128,12 +226,12 @@
 <div class="training-nav" id="task-nav"></div><div class="task"><div class="callout-number" id="task-number"></div><h3 id="task-title"></h3><p id="task-desc"></p><ul id="task-rules"></ul></div><div class="row"><button class="primary" id="task-load">载入任务 →</button><button id="task-check">检查当前设置</button><button id="task-hint">提示</button></div><div class="feedback" id="task-feedback" role="status"></div><p class="caption" id="task-progress">完成 0 / 4 个拍摄任务。本次打开期间保留进度。</p>
 <div class="section-break"></div><h3>理解自测</h3><div id="quiz"></div>
 <div class="section-break"></div><h3>实拍步骤</h3><div class="grid2 lesson-text"><div><h4>01 · 确定拍摄目标</h4><p>先决定要背景虚化、凝固动作，还是保留动感。拍静态弱光场景时，考虑能否使用支撑。</p><h4>02 · 选择模式</h4><p>控制景深用 A/Av，控制运动用 S/Tv。留意另一项参数是否合适。全部手动时用 M。</p></div><div><h4>03 · 调整亮度</h4><p>光圈和快门受限时，提高 ISO。也可以补光，或在主体静止、相机稳定时延长曝光。</p><h4>04 · 放大检查</h4><p>检查焦点、拖影、高光警告和暗部噪点。每次只改一个主要参数，重拍比较。</p></div></div>
-<div class="table-wrap"><table><thead><tr><th>想保留的效果</th><th>参考起点（经验值）</th><th>检查重点</th></tr></thead><tbody><tr><td>人像背景柔和</td><td>A / Av，f/1.8–f/2.8</td><td>先检查眼睛是否在焦内；多人不在同一距离时适当收光圈；检查快门。</td></tr><tr><td>骑行、奔跑清楚</td><td>S / Tv，1/500–1/1000 s</td><td>放大观察运动边缘；仍拖影就缩短快门，并让光圈或 ISO 补偿。</td></tr><tr><td>静态风景有层次</td><td>A / Av，f/5.6–f/11</td><td>检查近景与远景，不把 f/22 当作万能清晰档；弱光用稳定支撑。</td></tr><tr><td>稳定机位的静态夜景</td><td>M，低 ISO，按亮度延长曝光</td><td>高光是否裁切、树叶或行人是否移动；长曝光并不保证所有对象清楚。</td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>想保留的效果</th><th>参考起点（经验值）</th><th>检查重点</th></tr></thead><tbody><tr><td data-label="想保留的效果">人像背景柔和</td><td data-label="参考起点（经验值）">A / Av，f/1.8–f/2.8</td><td data-label="检查重点">先检查眼睛是否在焦内；多人不在同一距离时适当收光圈；检查快门。</td></tr><tr><td data-label="想保留的效果">骑行、奔跑清楚</td><td data-label="参考起点（经验值）">S / Tv，1/500–1/1000 s</td><td data-label="检查重点">放大观察运动边缘；仍拖影就缩短快门，并让光圈或 ISO 补偿。</td></tr><tr><td data-label="想保留的效果">静态风景有层次</td><td data-label="参考起点（经验值）">A / Av，f/5.6–f/11</td><td data-label="检查重点">检查近景与远景，不把 f/22 当作万能清晰档；弱光用稳定支撑。</td></tr><tr><td data-label="想保留的效果">稳定机位的静态夜景</td><td data-label="参考起点（经验值）">M，低 ISO，按亮度延长曝光</td><td data-label="检查重点">高光是否裁切、树叶或行人是否移动；长曝光并不保证所有对象清楚。</td></tr></tbody></table></div>
 <div class="question"><b>实拍作业：三组对照</b>固定机位，各拍两张：不同光圈的前后景、不同快门的移动主体、等亮度但收光量不同的静物。每组尽量保持其他条件不变，记录差异及原因。</div>
 <details class="details"><summary>参考资料与模型说明</summary><p>本课面向数字静态摄影。插画未模拟像差、衍射、真实色彩与降噪，实际效果需用相机验证。后续可学习对焦、焦距与透视、直方图、用光和构图。</p><ul class="source-list"><li><a href="https://www.sony.co.uk/electronics/support/articles/00267926" target="_blank" rel="noreferrer">Sony · 光圈与 A 模式</a> — 光圈刻度、景深与自动快门。</li><li><a href="https://www.nikonusa.com/learn-and-explore/c/tips-and-techniques/understanding-maximum-aperture" target="_blank" rel="noreferrer">Nikon · Understanding Maximum Aperture</a> — 最大光圈及通光量。</li><li><a href="https://www.nikonusa.com/learn-and-explore/c/tips-and-techniques/understanding-shutter-speed" target="_blank" rel="noreferrer">Nikon · Understanding Shutter Speed</a> — 时间、收光和运动。</li><li><a href="https://www.photonstophotos.net/Emil%20Martinec/noise.html" target="_blank" rel="noreferrer">Emil Martinec · Noise, Dynamic Range and Bit Depth</a> — 光子波动及信噪比。</li><li><a href="https://photonstophotos.net/Charts/RN_e.htm" target="_blank" rel="noreferrer">Photons to Photos · Input-referred Read Noise</a> — 真实机型读出噪声并非固定。</li><li><a href="https://ciechanow.ski/cameras-and-lenses/" target="_blank" rel="noreferrer">Bartosz Ciechanowski · Cameras and Lenses</a> — 教学方法参考：先改变画面，再解释光学。</li></ul><p>资料核对：2026-09-07。实验可离线使用，参考链接需要网络。</p></details>
-<div class="chapter-footer"><p id="course-status">可回到首页重新比较预设。</p><button data-go="0">回到首页 ↗</button></div>
+<div class="chapter-footer"><p id="course-status"></p><button data-go="0">回到首页 ↗</button></div>
 </section>
-<div class="footer-note">这破相机真难用，实在学不会大不了用auto</div>
+<div class="footer-note">你这相机不咋地啊，拍的还不如我手机好看</div>
 </main></div>
 <script>
 (() => {
@@ -212,7 +310,7 @@ function scene(canvas,s){
  c.save();c.filter=`blur(${Math.min(20,coc(n,focus,15)*25*1.6).toFixed(2)}px)`;c.drawImage(trees,0,0);c.restore();
  const m=movingLayer.getContext('2d');m.clearRect(0,0,W,H);m.globalCompositeOperation='lighter';
  const distance=Math.min(440,speed*t), samples=Math.max(1,Math.min(96,Math.ceil(distance/2.5)));
- const pos=470+Math.sin(phase*.5)*54;
+ const pos=470+Math.sin(phase*.5)*54+(s.positionOffset??0);
  for(let i=0;i<samples;i++){m.globalAlpha=1/samples;m.drawImage(bicycle,pos+(samples===1?0:(i/(samples-1)-.5)*distance)-82,198);}
  m.globalAlpha=1;m.globalCompositeOperation='source-over';c.save();c.filter=`blur(${Math.min(20,coc(n,focus,5)*25*1.6).toFixed(2)}px)`;c.drawImage(movingLayer,0,0);c.restore();
  c.save();c.filter=`blur(${Math.min(23,coc(n,focus,2)*25*1.6).toFixed(2)}px)`;c.drawImage(near,0,0);c.restore();
@@ -228,19 +326,62 @@ function scene(canvas,s){
 }
 
 function switchPage(n){
- page=n;visited.add(n);$$('.chapter').forEach((el,i)=>el.hidden=i!==n);$$('nav button').forEach(b=>{if(+b.dataset.page===n)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
- $('visit-progress').style.width=visited.size/7*100+'%';$('visit-text').textContent=`已浏览 ${visited.size} / 7 章`;renderCurrent();window.scrollTo({top:0,behavior:'instant'});
+ page=n;$('chapter-picker').value=String(n);visited.add(n);$$('.chapter').forEach((el,i)=>el.hidden=i!==n);$$('nav button').forEach(b=>{if(+b.dataset.page===n)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
+ $('visit-progress').style.width=visited.size/7*100+'%';$('visit-text').textContent=`已浏览 ${visited.size} / 7 章`;if(!paused&&page===2&&$('sh-depth').open)resumeShutter();motionLabel();renderCurrent();window.scrollTo({top:0,behavior:'instant'});
  const title=$('title-'+n);title.tabIndex=-1;title.focus({preventScroll:true});
 }
 $$('[data-page]').forEach(b=>b.addEventListener('click',()=>switchPage(+b.dataset.page)));$$('[data-go]').forEach(b=>b.addEventListener('click',()=>switchPage(+b.dataset.go)));
-function motionLabel(){$('motion-toggle').textContent=paused?'播放动画':'暂停动画';$('motion-toggle').setAttribute('aria-pressed',String(paused));}
-$('motion-toggle').addEventListener('click',()=>{paused=!paused;motionLabel();});motionLabel();
-matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change',e=>{paused=e.matches;motionLabel();});
+$('chapter-picker').addEventListener('change',()=>switchPage(+$('chapter-picker').value));
+function motionLabel(){
+ const active=page<=2||(page===3&&$('iso-depth').open),button=$('motion-toggle');
+ button.disabled=!active;button.textContent=active?(paused?'播放动画':'暂停动画'):'静态预览';button.setAttribute('aria-pressed',String(paused));
+}
+function setAnimationPaused(value){
+ paused=value;lastTime=0;
+ if(!paused&&page===2&&$('sh-depth').open)resumeShutter();
+ motionLabel();renderCurrent();
+}
+$('motion-toggle').addEventListener('click',()=>setAnimationPaused(!paused));motionLabel();
+matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change',e=>setAnimationPaused(e.matches));
 
 const HERO={portrait:{n:2,t:1/1000,iso:200,speed:240},freeze:{n:8,t:1/1000,iso:3200,speed:240},motion:{n:Math.sqrt(128),t:1/15,iso:100,speed:350},grain:{n:Math.sqrt(128),t:1/1000,iso:200,speed:240},overexposed:{n:2,t:1/125,iso:200,speed:240}};
 const HERO_LABEL={portrait:'主体清楚，背景虚化',freeze:'快门较短，运动清楚',motion:'背景清楚，主体拖影',grain:'欠曝 5 档：画面很暗，暗部难辨',overexposed:'过曝 3 档：亮部发白，细节丢失'};
 function renderHero(){const s=HERO[heroMode];scene($('hero-canvas'),{...s,phase:clock});$('hero-settings').textContent=`50 mm · ${fstr(s.n)} · ${tstr(s.t)} · ISO ${s.iso}`;if($('hero-effect').textContent!==HERO_LABEL[heroMode])$('hero-effect').textContent=HERO_LABEL[heroMode];}
 $$('[data-hero]').forEach(b=>b.addEventListener('click',()=>{heroMode=b.dataset.hero;$$('[data-hero]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));renderHero();}));
+
+// Quick previews animate from the shared clock; pause freezes their composition.
+const QUICK={ap:{index:3,view:'brightness'},sh:{index:5,view:'motion'},iso:{index:4}};
+function renderQuick(kind){
+ const state=QUICK[kind];let settings,text,note;
+ if(kind==='ap'){
+  const n=AP[state.index],compareBlur=state.view==='blur';text=fstr(n);
+  settings={n,t:1/125,iso:100,speed:0,normalized:compareBlur,noNoise:true};
+  note=compareBlur?'预览亮度保持一致，只看虚化：数字越小，背景通常越虚。':'快门、ISO 和光线固定：数字越小，开口越大，画面越亮。';
+ }else if(kind==='sh'){
+  const t=TIMES[state.index],compareMotion=state.view==='motion';text=tstr(t);
+  settings={n:8,t,iso:400,speed:350,normalized:compareMotion,noNoise:true};
+  note=compareMotion?'预览亮度保持一致，只看拖影：时间越长，骑行者留下的轨迹越长。':'光圈、ISO 和光线固定：时间越长，收光越多，画面越亮。';
+ }else{
+  const iso=ISO[state.index];text=String(iso);
+  settings={n:4,t:1/125,iso,light:7,speed:0};
+  note='光线、光圈和快门都没变。ISO 提高后，照片更亮，原来暗部的颗粒也更容易看见。';
+ }
+ scene($(kind+'-quick-scene'),{...settings,phase:kind==='iso'?0:clock});
+ $(kind+'-quick-slider').value=state.index;$(kind+'-quick-slider').setAttribute('aria-valuetext',kind==='iso'?'ISO '+text:text);$(kind+'-quick-out').value=text;
+ if($(kind+'-quick-note').textContent!==note)$(kind+'-quick-note').textContent=note;
+ $$(`[data-quick-view="${kind}"]`).forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.view===state.view)));
+ $$(`[data-quick-preset="${kind}"]`).forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.index===state.index)));
+}
+$$('[data-quick-slider]').forEach(input=>input.addEventListener('input',()=>{QUICK[input.dataset.quickSlider].index=+input.value;renderQuick(input.dataset.quickSlider);}));
+$$('[data-quick-preset]').forEach(b=>b.addEventListener('click',()=>{QUICK[b.dataset.quickPreset].index=+b.dataset.index;renderQuick(b.dataset.quickPreset);}));
+$$('[data-quick-view]').forEach(b=>b.addEventListener('click',()=>{QUICK[b.dataset.quickView].view=b.dataset.view;renderQuick(b.dataset.quickView);}));
+$$('.lesson-depth').forEach(el=>el.addEventListener('toggle',()=>{
+ if(el.id==='sh-depth'&&!el.open)shPlaying=false;
+ if(el.closest('.chapter').id==='chapter-'+page){
+  if(el.id==='sh-depth'&&el.open&&!paused)resumeShutter();
+  motionLabel();renderCurrent();
+ }
+}));
 
 function renderAperture(){
  const n=AP[+$('ap-n').value],s=+$('ap-focus').value/10,d=dof(n,s);
@@ -250,7 +391,7 @@ function renderAperture(){
  const focused=Math.abs(s-5)<.25?'主体准确对焦。':s<3?'焦点靠近花，主体可能离焦。':s>10?'焦点移到远景，主体可能离焦。':'焦点已离开主体所在的 5 m。';
  $('ap-observe').textContent=`${focused} ${$('ap-normalize').checked?'预览亮度已归一化；下方收光倍率仍反映真实变化。':'快门 1/125 s、ISO 100 固定，开口变小会让照片变暗。'}`;
  scene($('ap-scene'),{n,t:1/125,iso:100,focus:s,speed:0,normalized:$('ap-normalize').checked,noNoise:true});
- const narrow=$('ap-optics').clientWidth<500;$('ap-optics').width=narrow?450:900;$('ap-optics').height=narrow?300:255;
+ const narrow=$('ap-optics').clientWidth<500;$('ap-optics').width=narrow?360:900;$('ap-optics').height=narrow?470:255;
  const c=ctx('ap-optics');
  if(narrow){renderApertureNarrow(c,n,s,d);return;}
  c.clearRect(0,0,900,255);c.fillStyle='#17231c';c.fillRect(0,0,900,255);
@@ -267,39 +408,51 @@ function renderAperture(){
  [0,2,5,10,15,20].forEach(x=>{line(c,[[map(x),217],[map(x),229]],'#c6d3bb',1);label(c,x+' m',map(x),248,10,'#b4c4b4','center');});line(c,[[map(s),204],[map(s),231]],'#efbe7c',3);label(c,'景深尺',125,230,12,'#a9d7b6','center');
 }
 function renderApertureNarrow(c,n,s,d){
- c.fillStyle='#17231c';c.fillRect(0,0,450,300);label(c,'镜头开口',80,27,16,'#c4d4c4','center');label(c,'离焦光束（示意）',302,27,16,'#c4d4c4','center');
- circle(c,80,100,51,'#65735c');const r=43*Math.SQRT2/n;circle(c,80,100,r,'#e6b575');for(let i=0;i<8;i++){const a=i*Math.PI/4;line(c,[[80+Math.cos(a)*r,100+Math.sin(a)*r],[80+Math.cos(a+.5)*51,100+Math.sin(a+.5)*51]],'#304330',2);}
- label(c,fstr(n),80,180,21,'#e6b575','center');line(c,[[223,52],[223,148]],'#9dc6dc',3);line(c,[[350,52],[350,148]],'#a9d7b6',4);
- for(let i=-2;i<=2;i++){const y=100+r*i/2;line(c,[[165,100],[223,y],[410,100]],'#e6b575',1.5);const p=((clock*.4+i*.2)%1+1)%1;circle(c,223+p*127,lerp(y,100,p*127/187),2.4,'#f7d599');}
- label(c,'光圈',223,177,15,'#9dc6dc','center');label(c,'传感器',350,177,15,'#a9d7b6','center');label(c,'可接受清晰范围',25,220,16,'#a9d7b6');
- const map=x=>25+clamp(x,0,20)/20*400;line(c,[[25,250],[425,250]],'#506653',2);roundRect(c,map(d.near),241,Math.max(2,map(Math.min(20,d.far))-map(d.near)),18,3,'#71966e');
- for(const v of [0,5,10,15,20]){line(c,[[map(v),244],[map(v),258]],'#bed0b9',1);label(c,v+' m',map(v),281,13,'#c4d4c4','center');}line(c,[[map(s),232],[map(s),260]],'#efbe7c',3);
+ c.fillStyle='#17231c';c.fillRect(0,0,360,470);label(c,'镜头开口',180,28,18,'#c4d4c4','center');
+ circle(c,180,100,51,'#65735c');const r=43*Math.SQRT2/n;circle(c,180,100,r,'#e6b575');
+ for(let i=0;i<8;i++){const a=i*Math.PI/4;line(c,[[180+Math.cos(a)*r,100+Math.sin(a)*r],[180+Math.cos(a+.5)*51,100+Math.sin(a+.5)*51]],'#304330',2);}
+ label(c,fstr(n),180,179,22,'#e6b575','center');label(c,'离焦光束（示意）',180,214,18,'#c4d4c4','center');
+ line(c,[[112,238],[112,326]],'#9dc6dc',3);line(c,[[250,238],[250,326]],'#a9d7b6',4);
+ for(let i=-2;i<=2;i++){const y=280+r*i/2;line(c,[[25,280],[112,y],[325,280]],'#e6b575',1.5);const p=((clock*.4+i*.2)%1+1)%1;circle(c,112+p*138,lerp(y,280,p*138/213),2.4,'#f7d599');}
+ label(c,'光圈',112,352,17,'#9dc6dc','center');label(c,'传感器',250,352,17,'#a9d7b6','center');label(c,'可接受清晰范围',20,390,18,'#a9d7b6');
+ const map=x=>25+clamp(x,0,20)/20*310;line(c,[[25,426],[335,426]],'#506653',2);roundRect(c,map(d.near),417,Math.max(2,map(Math.min(20,d.far))-map(d.near)),18,3,'#71966e');
+ for(const v of [0,5,10,15,20]){line(c,[[map(v),420],[map(v),434]],'#bed0b9',1);label(c,v+' m',map(v),457,16,'#c4d4c4','center');}line(c,[[map(s),408],[map(s),436]],'#efbe7c',3);
 }
 ['ap-n','ap-focus','ap-normalize'].forEach(id=>$(id).addEventListener('input',renderAperture));
 $('ap-wide').onclick=()=>{$('ap-n').value=1;renderAperture();};$('ap-small').onclick=()=>{$('ap-n').value=7;renderAperture();};$('ap-reset').onclick=()=>{$('ap-n').value=2;$('ap-focus').value=50;$('ap-normalize').checked=true;renderAperture();};
 
 function renderShutter(){
- const t=TIMES[+$('sh-t').value],speed=+$('sh-speed').value,p=+$('sh-progress').value/100;
- $('sh-t-out').value=tstr(t);$('sh-t').setAttribute('aria-valuetext',tstr(t));$('sh-speed-out').value=speed+' px/s';$('sh-progress-out').value=Math.round(p*100)+'%';
+ const t=TIMES[+$('sh-t').value],speed=+$('sh-speed').value,p=shProgress/100;
+ $('sh-t-out').value=tstr(t);$('sh-t').setAttribute('aria-valuetext',tstr(t));$('sh-speed-out').value=speed+' px/s';$('sh-speed').setAttribute('aria-valuetext',speed+' px/s');$('sh-progress-out').value=Math.round(p*100)+'%';$('sh-progress').setAttribute('aria-valuetext',Math.round(p*100)+'%');
  $('sh-duration').textContent=t>=1?'1 s':(t*1000).toFixed(t<.001?2:1)+' ms';$('sh-blur').textContent=(speed*t).toFixed(2)+' px';$('sh-light').textContent=ratio(t*125);
- scene($('sh-scene'),{n:8,t:Math.max(t*p,1e-8),iso:100,speed,normalized:true,noNoise:true,shake:$('sh-shake').checked});
- if(p===0){const c=ctx('sh-scene');c.fillStyle='#17231ce8';c.fillRect(0,0,W,H);label(c,'快门尚未开始记录',450,210,24,'#d9e4d4','center');}
- const narrow=$('sh-timeline').clientWidth<500;$('sh-timeline').width=narrow?450:900;$('sh-timeline').height=narrow?195:190;
- const c=ctx('sh-timeline');c.fillStyle='#17231c';c.fillRect(0,0,900,195);
- if(narrow){label(c,'记录区间 · '+tstr(t),24,30,17);label(c,'累计 '+Math.round(p*100)+'%',425,30,16,'#a9d7b6','right');
- const range=Math.min(340,speed*t);for(let i=0;i<11;i++){const u=i/10,x=55+range*u;c.globalAlpha=u<=p?.8:.15;circle(c,x,83,7,'#e6b575');line(c,[[x,91],[x,111]],'#e6b575',3);}c.globalAlpha=1;
- line(c,[[25,144],[425,144]],'#405644',5);line(c,[[25,144],[25+400*p,144]],'#a9d7b6',5);circle(c,25+400*p,144,6,'#e6b575');label(c,'快门打开',25,182,15);label(c,'快门关闭',425,182,15,'#c4d4c4','right');
+ scene($('sh-scene'),{n:8,t:Math.max(t*p,1e-8),iso:100,speed,normalized:true,noNoise:true,shake:$('sh-shake').checked,positionOffset:-speed*t*(1-p)/2});
+ if(p===0){const c=ctx('sh-scene');c.fillStyle='#17231ce8';c.fillRect(0,0,W,H);label(c,'快门尚未开始记录',450,210,Math.max(24,15*900/Math.max(260,$('sh-scene').clientWidth)),'#d9e4d4','center');}
+ const narrow=$('sh-timeline').clientWidth<500;$('sh-timeline').width=narrow?360:900;$('sh-timeline').height=narrow?220:190;
+ const c=ctx('sh-timeline');c.fillStyle='#17231c';c.fillRect(0,0,$('sh-timeline').width,$('sh-timeline').height);
+ if(narrow){label(c,'记录 '+tstr(t),20,28,18);label(c,Math.round(p*100)+'%',340,28,18,'#a9d7b6','right');
+ const range=speed>0?280:0;for(let i=0;i<11;i++){const u=i/10,x=40+range*u;c.globalAlpha=u<=p?.8:.15;circle(c,x,80,6,'#e6b575');line(c,[[x,88],[x,108]],'#e6b575',3);}c.globalAlpha=1;circle(c,40+range*p,80,8,'#a9d7b6');
+ label(c,'位置已缩放，实际位移见下方',20,143,16,'#a9bda9');
+ line(c,[[20,170],[340,170]],'#405644',5);line(c,[[20,170],[20+320*p,170]],'#a9d7b6',5);circle(c,20+320*p,170,6,'#e6b575');label(c,'快门打开',20,206,17);label(c,'快门关闭',340,206,17,'#c4d4c4','right');
  }else{
  label(c,'一张照片里累计的位置',30,29,13);label(c,`真实时长 ${tstr(t)} / 当前累计 ${Math.round(p*100)}%`,865,29,12,'#a9bda9','right');
- const x0=225,range=Math.min(520,speed*t*1.3),count=11;
- for(let i=0;i<count;i++){const u=i/(count-1),x=x0+range*u;c.globalAlpha=u<=p?.7:.13;circle(c,x,81,8,'#e6b575');line(c,[[x,91],[x,111]],'#e6b575',3);}c.globalAlpha=1;
+ const x0=225,range=speed>0?520:0,count=11;
+ for(let i=0;i<count;i++){const u=i/(count-1),x=x0+range*u;c.globalAlpha=u<=p?.7:.13;circle(c,x,81,8,'#e6b575');line(c,[[x,91],[x,111]],'#e6b575',3);}c.globalAlpha=1;circle(c,x0+range*p,81,10,'#a9d7b6');label(c,'位置间距已缩放 · 实际位移见下方',75,125,11,'#a9bda9');
  line(c,[[75,142],[825,142]],'#405644',5);line(c,[[75,142],[75+750*p,142]],'#a9d7b6',5);circle(c,75+750*p,142,6,'#e6b575');label(c,'快门打开 · 0',75,174,11);label(c,'快门关闭 · '+tstr(t),825,174,11,'#c4d4c4','right');}
  $('sh-observe').textContent=speed===0?($('sh-shake').checked?'主体静止，但相机抖动会让整个画面模糊。':'主体与相机都静止：即使曝光时间很长，也没有运动拖影。'):speed*t<1?'主体位移不到 1 px，在当前画面尺度上接近凝固。':`主体在完整曝光期间经过约 ${(speed*t).toFixed(1)} px。这些位置会共同贡献到一张照片。`;
 }
-['sh-t','sh-speed','sh-shake'].forEach(id=>$(id).addEventListener('input',()=>{shPlaying=false;$('sh-progress').value=100;renderShutter();}));
-$('sh-progress').addEventListener('input',()=>{shPlaying=false;renderShutter();});$('sh-replay').onclick=()=>{shProgress=0;$('sh-progress').value=0;shPlaying=true;paused=false;motionLabel();renderShutter();};
-$('sh-step').onclick=()=>{shPlaying=false;paused=true;motionLabel();const v=+$('sh-progress').value;$('sh-progress').value=v>=100?10:v+10;renderShutter();};
-$('sh-reset').onclick=()=>{shPlaying=false;$('sh-t').value=5;$('sh-speed').value=180;$('sh-progress').value=100;$('sh-shake').checked=false;renderShutter();};
+function setShutterProgress(value){shProgress=clamp(Number(value),0,100);$('sh-progress').value=shProgress;}
+function resumeShutter(){if(shProgress>=100)setShutterProgress(0);shPlaying=true;}
+function pauseShutterAt(value){shPlaying=false;paused=true;setShutterProgress(value);motionLabel();renderShutter();}
+// Stop playback before a drag starts, so animation cannot move the thumb underneath it.
+['sh-t','sh-speed','sh-shake','sh-progress'].forEach(id=>{
+ const input=$(id);input.addEventListener('pointerdown',()=>pauseShutterAt(shProgress));
+ input.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','PageUp','PageDown'].includes(e.key))pauseShutterAt(shProgress);});
+});
+['sh-t','sh-speed','sh-shake'].forEach(id=>$(id).addEventListener('input',()=>pauseShutterAt(100)));
+$('sh-progress').addEventListener('input',()=>pauseShutterAt(+$('sh-progress').value));
+$('sh-replay').onclick=()=>{setShutterProgress(0);shPlaying=true;setAnimationPaused(false);};
+$('sh-step').onclick=()=>pauseShutterAt(shProgress>=100?10:Math.min(100,shProgress+10));
+$('sh-reset').onclick=()=>{$('sh-t').value=5;$('sh-speed').value=180;$('sh-shake').checked=false;pauseShutterAt(100);};
 
 function isoImage(id,Q,gain,seed){
  const c=ctx(id),r=rand(seed),cw=7,ch=7;c.clearRect(0,0,420,340);
@@ -319,11 +472,12 @@ function renderISO(){
  $('iso-observe').textContent=`传感器平均记录 ${q} 个光电子，与 ISO 无关。ISO ${iso} 在本模型中把信号与已有波动一起放大 ${gain} 倍，相对噪声仍约 ${(rel*100).toFixed(1)}%。`;
 }
 function renderISOChain(q,gain){
- const narrow=$('iso-chain').clientWidth<500;$('iso-chain').width=narrow?450:900;$('iso-chain').height=narrow?230:150;
- if(narrow){const c=ctx('iso-chain');c.fillStyle='#17231c';c.fillRect(0,0,450,230);
- label(c,'光 → 传感器记录',25,34,17);label(c,'ISO → 输出',25,143,17);line(c,[[25,78],[421,78]],'#405443');line(c,[[25,186],[421,186]],'#405443');
- for(let i=0;i<17;i++){const p=(i/17+clock*.3)%1;circle(c,25+210*p,76+Math.sin(i*1.7)*19,2.5,'#e6b575');}
- roundRect(c,290,54,125,48,5,'#38513c');label(c,q+' e⁻',352,86,20,'#d8e8d0','center');roundRect(c,65,164,104,44,5,'#443f2c');label(c,'× '+gain,117,194,22,'#e6b575','center');label(c,'数量不变，只改增益',310,193,15,'#a9d7b6','center');return;}
+ const narrow=$('iso-chain').clientWidth<500;$('iso-chain').width=narrow?360:900;$('iso-chain').height=narrow?270:150;
+ if(narrow){const c=ctx('iso-chain');c.fillStyle='#17231c';c.fillRect(0,0,360,270);
+ label(c,'光 → 传感器记录',20,28,18);label(c,'ISO → 输出',20,146,18);line(c,[[20,72],[340,72]],'#405443');line(c,[[20,198],[340,198]],'#405443');
+ for(let i=0;i<17;i++){const p=(i/17+clock*.3)%1;circle(c,20+175*p,72+Math.sin(i*1.7)*16,2.5,'#e6b575');}
+ roundRect(c,210,48,130,48,5,'#38513c');label(c,q+' e⁻',275,80,20,'#d8e8d0','center');roundRect(c,20,174,96,48,5,'#443f2c');label(c,'× '+gain,68,206,22,'#e6b575','center');label(c,'信号与波动一起放大',238,204,17,'#a9d7b6','center');label(c,'收光量不变',20,254,17,'#a9d7b6');return;}
+
  const c=ctx('iso-chain');c.fillStyle='#17231c';c.fillRect(0,0,900,150);label(c,'收集光',90,32,12);label(c,'传感器记录',338,32,12);label(c,'ISO 增益',590,32,12);label(c,'输出',808,32,12);
  line(c,[[48,87],[852,87]],'#3a4b3c',1);
  const count=Math.round(7+Math.log2(q/32)*4);for(let i=0;i<count;i++){const p=((i/count+clock*.25)%1),x=45+245*p;circle(c,x,65+Math.sin(i*1.6)*24,2,'#e6b575');}
@@ -395,7 +549,7 @@ function renderTask(){
  const t=TASKS[taskIndex];$('task-number').textContent='ASSIGNMENT '+String(taskIndex+1).padStart(2,'0');$('task-title').textContent=t.title;$('task-desc').textContent=t.desc;$('task-rules').innerHTML=t.rules.map(v=>'<li>'+v+'</li>').join('');
  $('task-nav').innerHTML=TASKS.map((t,i)=>`<button data-task="${i}" class="${i===taskIndex?'active':''}" aria-pressed="${i===taskIndex}">${completed.has(i)?'✓ ':''}${String(i+1).padStart(2,'0')} ${t.title}</button>`).join('');$$('[data-task]').forEach(b=>b.onclick=()=>{taskIndex=+b.dataset.task;$('task-feedback').textContent='';renderTask();});
  $('task-progress').textContent=`完成 ${completed.size} / 4 个拍摄任务。本次打开期间保留进度。`;
- $('course-status').textContent=completed.size===4&&quizDone.size===4?'拍摄任务与自测已全部通过。':'完成后，可以尝试下方的实拍作业。';
+ $('course-status').textContent=completed.size===4&&quizDone.size===4?'拍摄任务与自测已全部通过。':'';
 }
 $('task-load').onclick=()=>{const t=TASKS[taskIndex];Object.assign(cam,t.start,{light:t.light});$('cam-light').value=String(t.light);$('cam-moving').checked=t.moving;$('cam-mode').value='M';$('cam-comp').value=0;loadedTask=taskIndex;switchPage(5);};
 $('task-hint').onclick=()=>{$('task-feedback').className='feedback';$('task-feedback').textContent=TASKS[taskIndex].hint;};
@@ -412,11 +566,19 @@ const QUIZ=[
 ];
 function buildQuiz(){$('quiz').innerHTML=QUIZ.map((q,i)=>`<div class="quiz-card"><p>${i+1}. ${q.q}</p><div class="quiz-options">${q.options.map((v,j)=>`<button data-q="${i}" data-answer="${j}">${v}</button>`).join('')}</div><div class="quiz-answer" id="quiz-answer-${i}" role="status"></div></div>`).join('');$$('[data-q]').forEach(b=>b.onclick=()=>{const i=+b.dataset.q,j=+b.dataset.answer,q=QUIZ[i],ok=j===q.answer;$$(`[data-q="${i}"]`).forEach(x=>{x.classList.toggle('chosen',x===b);x.setAttribute('aria-pressed',String(x===b));});$('quiz-answer-'+i).textContent=(ok?'回答正确。':'再想一想。')+q.why;if(ok)quizDone.add(i);else quizDone.delete(i);renderTask();});}
 
-function renderCurrent(){if(page===0)renderHero();if(page===1)renderAperture();if(page===2)renderShutter();if(page===3)renderISO();if(page===4)renderStops();if(page===5)renderCamera();if(page===6)renderTask();}
+function renderCurrent(){if(page===0)renderHero();if(page>=1&&page<=3){const kind=['ap','sh','iso'][page-1];renderQuick(kind);if($(kind+'-depth').open)[renderAperture,renderShutter,renderISO][page-1]();}if(page===4)renderStops();if(page===5)renderCamera();if(page===6)renderTask();}
 let lastFrame=0;
 function frame(now){const dt=lastTime?Math.min((now-lastTime)/1000,.1):0;lastTime=now;
- if(!document.hidden&&!paused){clock+=dt;if(page===2&&shPlaying){shProgress=Math.min(100,shProgress+dt*32);$('sh-progress').value=shProgress;if(shProgress>=100){shPlaying=false;renderShutter();}}
-  if(now-lastFrame>70){if(page===0)renderHero();else if(page===1)renderAperture();else if(page===2&&shPlaying)renderShutter();else if(page===3)renderISOChain(Math.pow(2,+$('iso-photons').value),ISO[+$('iso-gain').value]/100);lastFrame=now;}
+ if(!document.hidden&&!paused){
+  clock+=dt;
+  if(page===2&&$('sh-depth').open&&shPlaying){setShutterProgress(shProgress+dt*32);if(shProgress>=100){shPlaying=false;renderShutter();}}
+  if(now-lastFrame>70){
+   if(page===0)renderHero();
+   else if(page===1){renderQuick('ap');if($('ap-depth').open)renderAperture();}
+   else if(page===2){renderQuick('sh');if($('sh-depth').open&&shPlaying)renderShutter();}
+   else if(page===3&&$('iso-depth').open)renderISOChain(Math.pow(2,+$('iso-photons').value),ISO[+$('iso-gain').value]/100);
+   lastFrame=now;
+  }
  }
  requestAnimationFrame(frame);
 }
