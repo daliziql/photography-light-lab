@@ -304,16 +304,67 @@ line(bc,[[79,67],[91,38]],orange,22);line(bc,[[92,40],[104,60],[115,63]],'#ddac7
 }
 const full=mkCanvas(W,H), movingLayer=mkCanvas(W,H), temp=mkCanvas(W,H), small=mkCanvas(450,210);
 const linear=new Float32Array(256);for(let i=0;i<256;i++)linear[i]=Math.pow(i/255,2.2);
+
+// Canvas 2D filters are unavailable in some mobile browsers. Blur pixels directly
+// so depth of field works everywhere, including offline. Three fractional box
+// passes approximate a Gaussian; premultiplied color avoids dark/colored halos.
+function blurPixels(image,sigma){
+ if(sigma<=0)return image;
+ const {width,height,data}=image,variance=sigma*sigma/3;
+ const radius=Math.floor((Math.sqrt(12*variance+1)-1)/2);
+ const edge=(variance-radius*(radius+1)/3)*(2*radius+1)/(2*((radius+1)**2-variance));
+ const weight=1/(2*radius+1+2*edge);
+ let a=new Float32Array(data.length),b=new Float32Array(data.length);
+ for(let i=0;i<data.length;i+=4){const alpha=data[i+3]/255;for(let k=0;k<3;k++)a[i+k]=data[i+k]*alpha;a[i+3]=data[i+3];}
+ function pass(vertical){
+  const length=vertical?height:width,count=vertical?width:height,step=vertical?width*4:4,stride=vertical?4:width*4;
+  for(let line=0;line<count;line++)for(let k=0;k<4;k++){
+   const start=line*stride+k;let sum=0;
+   for(let p=0;p<=Math.min(radius,length-1);p++)sum+=a[start+p*step];
+   for(let p=0;p<length;p++){
+    const left=p-radius-1,right=p+radius+1;
+    const outerLeft=left>=0?a[start+left*step]:0,outerRight=right<length?a[start+right*step]:0;
+    b[start+p*step]=(sum+edge*(outerLeft+outerRight))*weight;
+    if(p-radius>=0)sum-=a[start+(p-radius)*step];
+    if(right<length)sum+=outerRight;
+   }
+  }
+  [a,b]=[b,a];
+ }
+ for(let i=0;i<3;i++){pass(false);pass(true);}
+ for(let i=0;i<data.length;i+=4){
+  const alpha=Math.max(0,a[i+3]);data[i+3]=alpha;
+  for(let k=0;k<3;k++)data[i+k]=data[i+3]?a[i+k]*255/alpha:0;
+ }
+ return image;
+}
+const depthBlurCache=new WeakMap();
+function depthLayer(source,sigma){
+ sigma=Math.round(sigma*4)/4;
+ if(sigma===0)return{canvas:source,padding:0,scale:1};
+ let cache=depthBlurCache.get(source);if(!cache){cache=new Map();depthBlurCache.set(source,cache);}
+ if(cache.has(sigma)){const hit=cache.get(sigma);cache.delete(sigma);cache.set(sigma,hit);return hit;}
+ // Match the preview's existing half-resolution processing. Padding preserves
+ // blur around sprite edges; caching keeps convolution out of animation frames.
+ const padding=Math.ceil(3*sigma+4),canvas=mkCanvas(Math.ceil((source.width+padding*2)/2),Math.ceil((source.height+padding*2)/2));
+ const c=canvas.getContext('2d',{willReadFrequently:true});c.drawImage(source,padding/2,padding/2,source.width/2,source.height/2);
+ c.putImageData(blurPixels(c.getImageData(0,0,canvas.width,canvas.height),sigma/2),0,0);
+ const layer={canvas,padding,scale:2};cache.set(sigma,layer);
+ if(cache.size>12)cache.delete(cache.keys().next().value);
+ return layer;
+}
+function drawDepthLayer(c,layer,x=0,y=0){c.drawImage(layer.canvas,x-layer.padding,y-layer.padding,layer.canvas.width*layer.scale,layer.canvas.height*layer.scale);}
 function scene(canvas,s){
  const c=full.getContext('2d'),n=s.n??4,focus=s.focus??5,speed=s.speed??240,t=s.t??1/125, phase=s.phase??0;
  c.clearRect(0,0,W,H);c.drawImage(back,0,0);
- c.save();c.filter=`blur(${Math.min(20,coc(n,focus,15)*25*1.6).toFixed(2)}px)`;c.drawImage(trees,0,0);c.restore();
+ drawDepthLayer(c,depthLayer(trees,Math.min(20,coc(n,focus,15)*25*1.6)));
  const m=movingLayer.getContext('2d');m.clearRect(0,0,W,H);m.globalCompositeOperation='lighter';
  const distance=Math.min(440,speed*t), samples=Math.max(1,Math.min(96,Math.ceil(distance/2.5)));
  const pos=470+Math.sin(phase*.5)*54+(s.positionOffset??0);
- for(let i=0;i<samples;i++){m.globalAlpha=1/samples;m.drawImage(bicycle,pos+(samples===1?0:(i/(samples-1)-.5)*distance)-82,198);}
- m.globalAlpha=1;m.globalCompositeOperation='source-over';c.save();c.filter=`blur(${Math.min(20,coc(n,focus,5)*25*1.6).toFixed(2)}px)`;c.drawImage(movingLayer,0,0);c.restore();
- c.save();c.filter=`blur(${Math.min(23,coc(n,focus,2)*25*1.6).toFixed(2)}px)`;c.drawImage(near,0,0);c.restore();
+ const rider=depthLayer(bicycle,Math.min(20,coc(n,focus,5)*25*1.6));
+ for(let i=0;i<samples;i++){m.globalAlpha=1/samples;drawDepthLayer(m,rider,pos+(samples===1?0:(i/(samples-1)-.5)*distance)-82,198);}
+ m.globalAlpha=1;m.globalCompositeOperation='source-over';c.drawImage(movingLayer,0,0);
+ drawDepthLayer(c,depthLayer(near,Math.min(23,coc(n,focus,2)*25*1.6)));
  if(s.shake){const tc=temp.getContext('2d');tc.clearRect(0,0,W,H);tc.globalCompositeOperation='lighter';for(let i=0;i<12;i++){tc.globalAlpha=1/12;const a=i/11*Math.PI*3;const d=Math.min(24,t*70);tc.drawImage(full,Math.sin(a)*d,Math.cos(a)*d*.5);}tc.globalAlpha=1;tc.globalCompositeOperation='source-over';c.clearRect(0,0,W,H);c.drawImage(temp,0,0);}
  const sc=small.getContext('2d',{willReadFrequently:true});sc.drawImage(full,0,0,450,210);
  const im=sc.getImageData(0,0,450,210),data=im.data;const p=physics({...s,n,t,iso:s.iso??100}), brightness=s.normalized?1:p.output;
